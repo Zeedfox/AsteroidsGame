@@ -32,6 +32,5 @@ def main():
     #print(f"Screen height: {SCREEN_HEIGHT}")
 
 
-
 if __name__ == "__main__":
     main()
