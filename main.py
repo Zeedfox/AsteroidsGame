@@ -3,6 +3,7 @@ from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
+from shot import *
 
 def main():
     #This initialize the module of pygame. The library for games.
@@ -12,9 +13,11 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable,)
+    Shot.containers = (shots, updatable, drawable)
 
     #We will call a function to set up the window/display
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -43,13 +46,28 @@ def main():
         #this suppose to update and draw all the objects on the groups.. i dont know
         updatable.update(dt)
         for obj in drawable:
-            if(obj != player_ship):
+            if(obj != player_ship and obj not in shots):
                 if obj.collision_detect(player_ship):
                     print("You collided! GAME OVER!!!!!")
                     exit_flag = 1
             obj.draw(screen)
-        
 
+        for ast in asteroids:
+                for sho in shots:
+                    if ast.collision_detect(sho):
+                        #print("the asteroid got shooted")
+                        ast.split()
+                        sho.kill()
+                        #asteroids.remove(ast)
+                        #drawable.remove(ast)
+                        #updatable.remove(ast)
+                        #shots.remove(sho)
+                        #drawable.remove(sho)
+                        #updatable.remove(sho)
+                        #print(f"Asteroids left: {len(asteroids)}, Shots left: {len(shots)}")
+        
+        for obj in drawable:
+            obj.draw(screen)
 
         #Refreshing the Screen: it is important to be on the end
         #player_ship.rotation += 1 #let's rotate xD
